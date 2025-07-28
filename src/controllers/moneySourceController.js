@@ -9,6 +9,9 @@ exports.addMoneySource = async (req, res) => {
     }
     // Add source to user's sourcesEnum if not present
     const user = await User.findById(req.user.userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
     if (!user.sourcesEnum.includes(source)) {
       user.sourcesEnum.push(source);
       await user.save();
@@ -50,6 +53,9 @@ exports.editMoneySource = async (req, res) => {
     if (source && source !== moneySource.source) {
       // Update sourcesEnum: remove old, add new
       const user = await User.findById(req.user.userId);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
       user.sourcesEnum = user.sourcesEnum.filter(s => s !== moneySource.source);
       if (!user.sourcesEnum.includes(source)) {
         user.sourcesEnum.push(source);

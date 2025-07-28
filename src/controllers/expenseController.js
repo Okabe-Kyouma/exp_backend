@@ -10,6 +10,9 @@ exports.addExpense = async (req, res) => {
     }
     // Check if source is in user's sourcesEnum
     const user = await User.findById(req.user.userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
     if (!user.sourcesEnum.includes(source)) {
       return res.status(400).json({ message: 'Source not allowed. Please select a valid source.' });
     }
