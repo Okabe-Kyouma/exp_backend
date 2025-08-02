@@ -92,3 +92,12 @@ exports.listMoneySources = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 }; 
+
+exports.listMoneySourcesCategory = async (req,res) =>{
+    try {
+    const sources = await MoneySource.find({ user: req.user.userId });
+    res.json(sources.source);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+}

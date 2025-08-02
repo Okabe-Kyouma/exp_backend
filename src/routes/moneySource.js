@@ -8,5 +8,6 @@ router.delete('/delete/:id', auth, moneySourceController.deleteMoneySource);
 router.get('/total', auth, moneySourceController.getTotalAmount);
 router.get('/list', auth, moneySourceController.listMoneySources);
 router.put('/edit/:id', auth, moneySourceController.editMoneySource);
+router.get('/list/money/source/category',auth,moneySourceController.listMoneySourcesCategory);
 
 module.exports = router; 
