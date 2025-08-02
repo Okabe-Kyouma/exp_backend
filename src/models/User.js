@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
   sourcesEnum: {
-    type: [String],
+    type: [String], 
     default: []
   }
 }, { timestamps: true });
