@@ -23,7 +23,6 @@ exports.signup = async (req, res) => {
       phone: user.phone,
       // Add other public fields if needed
     };
-
     
     res.status(201).json({ message: 'User registered successfully' , user : userData});
   } catch (err) {
