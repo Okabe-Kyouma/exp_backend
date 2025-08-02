@@ -7,26 +7,48 @@ exports.addMoneySource = async (req, res) => {
     if (!source || typeof amount !== 'number') {
       return res.status(400).json({ message: 'Source and amount required' });
     }
-    // Add source to user's sourcesEnum if not present
+
     const user = await User.findById(req.user.userId);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
+
+    // Add to sourcesEnum if not already present
     if (!user.sourcesEnum.includes(source)) {
       user.sourcesEnum.push(source);
       await user.save();
     }
-    const newSource = new MoneySource({
+
+    // Check if the money source already exists
+    let existingSource = await MoneySource.findOne({
       user: req.user.userId,
       source,
-      amount
     });
-    await newSource.save();
-    res.status(201).json(newSource);
+
+    if (existingSource) {
+      // Option 1: Add to the existing amount
+      existingSource.amount += amount;
+
+      // Option 2: Replace the amount (uncomment to use)
+      // existingSource.amount = amount;
+
+      await existingSource.save();
+      return res.status(200).json({ message: 'Amount updated', data: existingSource });
+    } else {
+      // Create new source
+      const newSource = new MoneySource({
+        user: req.user.userId,
+        source,
+        amount,
+      });
+      await newSource.save();
+      return res.status(201).json({ message: 'Source added', data: newSource });
+    }
   } catch (err) {
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 };
+
 
 exports.deleteMoneySource = async (req, res) => {
   try {
