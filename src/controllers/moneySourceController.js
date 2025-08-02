@@ -93,11 +93,18 @@ exports.listMoneySources = async (req, res) => {
   }
 }; 
 
-exports.listMoneySourcesCategory = async (req,res) =>{
-    try {
+exports.listMoneySourcesCategory = async (req, res) => {
+  try {
     const sources = await MoneySource.find({ user: req.user.userId });
-    res.json(sources.source);
+
+    const sourceSet = new Set();
+    for (const sc of sources) {
+      sourceSet.add(sc.source);
+    }
+
+    const sourceCategories = Array.from(sourceSet);
+    res.json({ categories: sourceCategories });
   } catch (err) {
     res.status(500).json({ message: 'Server error', error: err.message });
   }
-}
+};
